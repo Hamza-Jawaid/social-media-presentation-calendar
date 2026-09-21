@@ -55,14 +55,28 @@
         }
     </script>
 </head>
-<body class="flex h-screen bg-gray-100 overflow-hidden" x-data="calendarApp()" :class="{ 'generating-pdf': isGenerating }">
+<body class="flex flex-col md:flex-row h-screen bg-gray-100 overflow-hidden relative" x-data="calendarApp()" :class="{ 'generating-pdf': isGenerating }">
 <!-------------------------------------------------------------------------------->
-<div
-        class="bg-white border-r border-gray-200 z-20 shadow-2xl flex flex-col h-screen sidebar-transition relative"
-        :class="sidebarOpen ? 'w-[420px]' : 'w-[80px]'"
+    <!-- MOBILE HEADER -->
+    <header class="md:hidden flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white z-30 shadow-sm shrink-0">
+        <div class="flex flex-col overflow-hidden whitespace-nowrap">
+            <h1 class="text-[14px] font-black text-agencyBlue tracking-tighter leading-none">Social Media Calendar Builder</h1>
+            <p class="text-[8px] text-gray-400 font-bold tracking-widest mt-1">Create, organize, and present social media content.</p>
+        </div>
+        <button @click="sidebarOpen = !sidebarOpen" class="text-gray-400 hover:text-agencyBlue transition p-2 rounded-lg hover:bg-gray-50 flex-shrink-0" aria-label="Toggle Sidebar">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </header>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <div class="flex flex-1 overflow-hidden relative w-full h-full">
+
+    <aside
+        class="bg-white border-r border-gray-200 z-20 shadow-2xl flex flex-col sidebar-transition"
+        :class="sidebarOpen ? 'absolute inset-0 w-full h-full md:w-[420px] md:relative md:h-screen z-50' : 'hidden md:flex md:w-[80px] md:relative md:h-screen z-50 overflow-hidden md:overflow-visible'"
     >
 
-        <div class="h-20 flex items-center border-b border-gray-100 bg-white shrink-0 transition-all duration-200"
+        <div class="hidden md:flex h-20 items-center border-b border-gray-100 bg-white shrink-0 transition-all duration-200"
              :class="sidebarOpen ? 'justify-between px-6' : 'justify-center'">
 
             <div x-show="sidebarOpen" class="flex flex-col overflow-hidden whitespace-nowrap">
@@ -213,7 +227,7 @@ with our free social media calendar tool.</p>
             </div>
         </div>
 
-        <div x-show="!sidebarOpen" class="flex-1 flex flex-col items-center pt-6 space-y-6" @click="sidebarOpen = true">
+        <div x-show="!sidebarOpen" class="hidden md:flex flex-1 flex-col items-center pt-6 space-y-6" @click="sidebarOpen = true">
             <div class="w-10 h-10 rounded-xl bg-blue-50 text-agencyBlue flex items-center justify-center cursor-pointer hover:bg-blue-100 transition shadow-sm">
                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
             </div>
@@ -227,7 +241,7 @@ with our free social media calendar tool.</p>
 
         </div>
 
-        <div class="p-4 bg-white border-t border-gray-200 z-10 shrink-0 flex justify-center">
+        <div class="p-4 bg-white border-t border-gray-200 z-10 shrink-0 flex justify-center" :class="!sidebarOpen ? 'hidden md:flex' : ''">
             <button
                 @click.stop="generatePDF()"
                 :disabled="isGenerating"
@@ -244,11 +258,12 @@ with our free social media calendar tool.</p>
                 </span>
             </button>
         </div>
-    </div>
+    </aside>
 
-    <div class="flex-grow preview-scroll" id="preview-container">
+    <main class="flex-grow preview-scroll w-full transition-all duration-300" :class="sidebarOpen ? 'hidden md:flex' : 'flex'" id="preview-container">
 
-        <div class="a4-page justify-between py-16 px-20 text-center relative">
+        <div class="a4-outer-wrapper" :style="`width: ${1123 * pageScale}px; height: ${794 * pageScale}px;`">
+        <div class="a4-page justify-between py-16 px-20 text-center relative" :style="`transform: scale(${pageScale})`">
             <div class="absolute top-24 left-24 text-agencyGold opacity-80 transform -rotate-12"><svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09v8.32c0 .41.01.82-.07 1.23-.2 1.05-.63 2.06-1.29 2.94-1.26 1.69-3.26 2.74-5.36 2.97-1.48.16-2.99-.04-4.35-.61-1.3-.55-2.45-1.44-3.26-2.6-1.07-1.52-1.39-3.5-.83-5.33.62-2.02 2.31-3.63 4.39-4.1.75-.17 1.53-.2 2.29-.11v4.06c-.32-.12-.66-.19-1-.19-.84-.01-1.63.43-2.03 1.17-.38.71-.28 1.59.25 2.22.45.54 1.14.86 1.85.83.8-.03 1.55-.4 2.01-1.06.4-.58.58-1.29.5-1.99V.02z"/></svg></div>
             <div class="absolute top-48 right-24 text-agencyGold opacity-80 transform rotate-6"><svg class="w-14 h-14" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5c0 3.3-2.45 5.75-5.75 5.75h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm0 1.5c-2.35 0-4.25 1.9-4.25 4.25v8.5c0 2.35 1.9 4.25 4.25 4.25h8.5c2.35 0 4.25-1.9 4.25-4.25v-8.5c0-2.35-1.9-4.25-4.25-4.25h-8.5zm8.5 2.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-4.25 1.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></div>
             <div class="absolute bottom-48 left-20 text-agencyGold opacity-80 transform -rotate-6"><svg class="w-14 h-14" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
@@ -283,7 +298,8 @@ with our free social media calendar tool.</p>
         </div>
 
         <template x-for="(post, index) in posts" :key="index">
-            <div class="a4-page flex flex-col">
+        <div class="a4-outer-wrapper" :style="`width: ${1123 * pageScale}px; height: ${794 * pageScale}px;`">
+            <div class="a4-page flex flex-col" :style="`transform: scale(${pageScale})`">
                 <div class="h-20 border-b border-gray-100 flex items-center justify-between px-16 bg-white shrink-0">
                     <span class="pdf-text font-bold text-gray-800 text-xl uppercase tracking-tighter" x-text="client.name"></span>
                     <div class="text-right">
@@ -375,9 +391,11 @@ with our free social media calendar tool.</p>
                     </div>
                 </div>
             </div>
+        </div>
         </template>
 
-        <div class="a4-page flex flex-col items-center justify-center relative bg-white">
+        <div class="a4-outer-wrapper" :style="`width: ${1123 * pageScale}px; height: ${794 * pageScale}px;`">
+        <div class="a4-page flex flex-col items-center justify-center relative bg-white" :style="`transform: scale(${pageScale})`">
             <div class="flex flex-col items-center max-w-5xl px-12 text-center mt-8 w-full">
                 <div class="mb-4">
                      <template x-if="agency.logo">
@@ -426,6 +444,8 @@ with our free social media calendar tool.</p>
             </div>
         </div>
 
+        </div>
+    </main>
     </div>
 </body>
 </html>
