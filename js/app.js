@@ -15,6 +15,31 @@ function calendarApp() {
             name: 'Add Client Name',
             subtitle: 'Social Media Content Calendar',
         },
+        pageScale: 1,
+
+        init() {
+            this.calculateScale();
+            window.addEventListener('resize', () => this.calculateScale());
+            this.$watch('sidebarOpen', () => {
+                setTimeout(() => this.calculateScale(), 300);
+            });
+        },
+
+        calculateScale() {
+            const container = document.getElementById('preview-container');
+            if (!container) return;
+
+            const containerWidth = container.clientWidth;
+            const padding = window.innerWidth < 768 ? 20 : 80;
+            const availableWidth = containerWidth - padding;
+            const a4Width = 1123;
+
+            if (availableWidth < a4Width) {
+                this.pageScale = availableWidth / a4Width;
+            } else {
+                this.pageScale = 1;
+            }
+        },
         posts: [
             { image: null, headline: '', caption: '', hashtags: '' }
         ],
@@ -88,6 +113,8 @@ function calendarApp() {
         },
 
         async generatePDF() {
+            const originalScale = this.pageScale;
+            this.pageScale = 1;
             this.isGenerating = true;
             await new Promise(resolve => setTimeout(resolve, 100)); // Wait for DOM update
 
@@ -126,6 +153,7 @@ function calendarApp() {
             addToDoc(thanksImg);
 
             doc.save(this.client.name + '_Calendar.pdf');
+            this.pageScale = originalScale;
             this.isGenerating = false;
         }
     }
