@@ -1,28 +1,18 @@
 /* A4 Page */
-.a4-outer-wrapper {
-    margin-bottom: 20px;
-    flex-shrink: 0;
-    display: flex;
-    justify-content: center;
-}
-
 .a4-page {
     width: 297mm;
     height: 210mm;
     background: white;
+    margin-bottom: 20px;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     overflow: hidden;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    transform-origin: top left;
 }
 
-.preview-scroll { background: #525659; padding: 20px; overflow-y: scroll; height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
-@media (min-width: 768px) {
-    .preview-scroll { padding: 40px; }
-}
+.preview-scroll { background: #525659; padding: 40px; overflow-y: scroll; height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
 /* FANCY THIN SCROLLBARS */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
