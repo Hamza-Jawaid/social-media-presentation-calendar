@@ -220,7 +220,7 @@ with our free social media calendar tool.</p>
                                                 </div>
                                             </template>
                                         </div>
-                                        <input type="file" x-ref="postInput" @change="uploadPostImage($event, index)" class="hidden" accept="image/*">
+                                        <input type="file" x-ref="postInput" multiple @change="uploadPostImage($event, index)" class="hidden" accept="image/*">
                                     </div>
 
                                     <div class="space-y-2">
