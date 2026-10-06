@@ -11,7 +11,9 @@ function calendarApp() {
             email: 'your@company.com',
             website: 'yourwebsite.com',
             phone: '(000) 000-0000',
-            logo: null
+            logo: null,
+            thankYouHeading: 'Thank You!',
+            thankYouDescription: 'We hope that you will like our research and approach. Please share your approval with us so we can start publishing on your social platforms. In addition, we would like your feedback on the work we did to make our work more pinpointed! If you want changes to this content, feel free to add notes to this PDF file or contact your project manager for a detailed discussion.'
         },
         client: {
             name: 'Add Client Name',
