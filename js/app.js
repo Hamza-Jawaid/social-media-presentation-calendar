@@ -4,6 +4,8 @@ function calendarApp() {
         sidebarOpen: false,
         isAgencyOpen: false,
         isClientOpen: false,
+        isPersonalizationOpen: false,
+        showTextFields: true,
         agency: {
             name: 'Write Your Agency Name',
             email: 'your@company.com',
