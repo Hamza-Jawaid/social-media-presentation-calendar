@@ -49,14 +49,45 @@ function calendarApp() {
             if (file) this.processFile(file, 'logo');
         },
         uploadPostImage(event, index) {
-            const file = event.target.files[0];
-            if (file) this.processFile(file, 'post', index);
+            const files = Array.from(event.target.files);
+            if (files.length > 0) {
+                this.processMultipleFiles(files, 'post', index);
+            }
         },
         handleDrop(event, type, index = null) {
-            const file = event.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                this.processFile(file, type, index);
+            if (type === 'logo') {
+                const file = event.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    this.processFile(file, type, index);
+                }
+            } else if (type === 'post') {
+                const files = Array.from(event.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                if (files.length > 0) {
+                    this.processMultipleFiles(files, type, index);
+                }
             }
+        },
+        processMultipleFiles(files, type, startIndex) {
+            let currentIndex = startIndex;
+
+            files.forEach(file => {
+                // Ensure we have a post at the current index
+                if (currentIndex >= this.posts.length) {
+                    this.addPost();
+                }
+
+                // Keep the current index for this file's callback
+                const targetIndex = currentIndex;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.posts[targetIndex].image = e.target.result;
+                    this.checkNewPostNeeded(targetIndex);
+                };
+                reader.readAsDataURL(file);
+
+                currentIndex++;
+            });
         },
         processFile(file, type, index = null) {
             const reader = new FileReader();
